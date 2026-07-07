@@ -48,6 +48,8 @@ case $SUBCMD in
 					exit 0
 				else
 					bash -c "$CACHE_DIR/$ARG/install.sh"
+					echo "$ARG installed"
+					exit 0
 				fi
 			fi
 		done
