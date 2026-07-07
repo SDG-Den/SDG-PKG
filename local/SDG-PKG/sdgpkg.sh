@@ -2,7 +2,7 @@
 
 CACHE_DIR=/home/$(whoami)/.cache/SDG-PKG
 CONF_DIR=/home/$(whoami)/.config/SDG-PKG
-OLD_DIR=/home/$(whoami)/.cache/SDG-PKG/old
+OLD_DIR=/home/$(whoami)/.cache/SDG-PKG-OLD
 SUBCMD=$1
 shift 1
 ARG=("$@")
@@ -27,6 +27,18 @@ for FILE in $REPOFILES; do
 	#echo "updated repo string: $REPOS"
 done
 
+runfile() {
+	local FILENAME=$1
+	echo "running file $FILENAME"
+	cat $CACHE_DIR/$ARG/$FILENAME
+	read -p "Do you wish to proceed? (y/N)" -n 1 CHOICE
+	echo ""
+	if [ "$CHOICE" != "y" ]; then
+		exit 0
+	else
+		bash -c "$CACHE_DIR/$ARG/$FILENAME"
+	fi
+}
 
 
 case $SUBCMD in
@@ -41,58 +53,27 @@ case $SUBCMD in
 					exit 0
 				fi
 				git -C $CACHE_DIR clone $PKGURL $ARG
-				echo "running install file $CACHE_DIR/$ARG/install.sh, please confirm content."
-				cat $CACHE_DIR/$ARG/install.sh
-				read -p "Do you want to proceed with installation? (y/N)" -n 1 CHOICE
-				if [ "$CHOICE" != "y" ]; then
-					exit 0
-				else
-					bash -c "$CACHE_DIR/$ARG/install.sh"
-					echo "$ARG installed"
-					exit 0
-				fi
+				runfile install.sh
+				exit 0
 			fi
 		done
 		;;
 	update)
 		echo "updating git repo"
 		git -C $CACHE_DIR/$ARG pull
-		echo "running update file $CACHE_DIR/$ARG/update.sh, please confirm"
-		cat $CACHE_DIR/$ARG/update.sh
-		read -n 1 -p "Do you want to proceed with the update? (y/N)" CHOICE
-		if [ "$CHOICE" != "y" ]; then
-			exit 0
-		else
-			bash -c "$CACHE_DIR/$ARG/update.sh"
-		fi
+		runfile update.sh
 			 
 		;;
 	upgrade)
 		INSTALLED=$(ls -1 $CACHE_DIR)
-		for REPO in $INSTALLED; do
-			git -C $CACHE_DIR/$REPO pull
-			echo "running update file $CACHE_DIR/$REPO/update.sh, please confirm"
-			cat $CACHE_DIR/$REPO/update.sh
-			read -n 1 -p "do you want to proceed with the update? (y/N)" CHOICE
-			if [ "$CHOICE" != "y" ]; then
-				echo "full upgrade aborted"
-				exit 0
-			else
-				bash -c "$CACHE_DIR/$REPO/update.sh"
-			fi
+		for ARG in $INSTALLED; do
+			git -C $CACHE_DIR/$ARG pull
+			runfile update.sh
 		done
 		;;
 	uninstall)
-		echo "running uninstall $CACHE_DIR/$ARG/uninstall.sh, please confirm"
-		cat $CACHE_DIR/$ARG/uninstall.sh
-		read -n 1 -p "do you want to proceed with the uninstall? (y/N)" CHOICE
-		if [ "$CHOICE" != "y" ]; then
-			exit 0
-		else
-			bash -c "$CACHE_DIR/$ARG/uninstall.sh"
-			mv $CACHE_DIR/$ARG $OLD_DIR/$ARG
-			echo "$ARG uninstalled and repo moved to $OLD_DIR, feel free to clean this directory."
-		fi
+		runfile uninstall.sh
+		mv $CACHE_DIR/$ARG $OLD_DIR/$ARG
 		
 		;;
 	list)
