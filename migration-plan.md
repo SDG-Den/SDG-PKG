@@ -1,89 +1,65 @@
 # SDG-PKG Migration Plan
 
-## 1. Bug Fixes (Critical)
+## Directory Mapping
 
-### 1.1 `bootstrap.sh` line 7 — typo
-- `bash =c "/home/$(whoami)/..."` should be `bash -c "/home/$(whoami)/..."`
-- The `=` instead of `-` breaks the bootstrap entirely.
+| Source | Installed to |
+|--------|-------------|
+| `config/SDG-PKG/` | `~/.config/SDG-PKG/` |
+| `local/SDG-PKG/sdgpkg.sh` | `~/.local/SDG-PKG/sdgpkg.sh` |
+| `docs/` | `~/.local/docs/SDG-PKG/` |
+| `tips/` | `~/.local/tips/SDG-PKG/` |
 
-### 1.2 `sdgpkg.sh` — ARG array vs scalar
-- Line 8: `ARG=("$@")` creates an array, but all references use `$ARG` (scalar).
-- Change to `ARG="${1}"` or use proper array indexing `"${ARG[0]}"`.
+## Path Rewrites
 
-### 1.3 `runfile()` uses global `$ARG`
-- `runfile()` reads `$ARG` instead of accepting the package name as `$1`.
-- Refactor to: `runfile() { local PKG=$1; ... cat $CACHE_DIR/$PKG/$FILENAME; ... }`.
+No internal scripts reference `~/.config/sdgos/` — SDG-PKG is the **package manager** and doesn't reference other modules by path. It references them via its git-based module system (`sdgpkg install <name>` clones repos to cache and runs their lifecycle scripts).
 
-### 1.4 No error handling
-- `git clone`, `curl`, `cp`, etc. are unchecked — can silently fail.
-- Add `|| exit 1` or proper `if ! cmd; then ... fi`.
+However, SDG-PKG's own install scripts need fixing:
 
-## 2. Path Cleanup
+1. **`sdgpkg.sh` — all path variables** use `/home/$(whoami)/` pattern:
+   - `CACHE_DIR=/home/$(whoami)/.cache/SDG-PKG` → `CACHE_DIR="$HOME/.cache/SDG-PKG"`
+   - `CONF_DIR=/home/$(whoami)/.config/SDG-PKG` → `CONF_DIR="$HOME/.config/SDG-PKG"`
+   - `OLD_DIR=/home/$(whoami)/.cache/SDG-PKG-OLD` → `OLD_DIR="$HOME/.cache/SDG-PKG-OLD"`
 
-### 2.1 All scripts use `/home/$(whoami)/` pattern
-- Replace `/home/$(whoami)/` with `$HOME` throughout.
-- Affected files: `bootstrap.sh`, `install.sh`, `uninstall.sh`, `update.sh`, `sdgpkg.sh`.
+2. **`bootstrap.sh`** — same pattern:
+   - `mkdir -p /home/$(whoami)/.cache/SDG-PKG` → `mkdir -p "$HOME/.cache/SDG-PKG"`
+   - `bash =c` typo → `bash -c`
 
-| Line | Current | Should be |
-|------|---------|-----------|
-| bootstrap.sh:3 | `/home/$(whoami)/.cache/SDG-PKG` | `$HOME/.cache/SDG-PKG` |
-| install.sh:9 | `WORKDIR=/home/$(whoami)/.cache/SDG-PKG/sdg-pkg` | `WORKDIR="$HOME/.cache/SDG-PKG/sdg-pkg"` |
-| sdgpkg.sh:3 | `CACHE_DIR=/home/$(whoami)/.cache/SDG-PKG` | `CACHE_DIR="$HOME/.cache/SDG-PKG"` |
-| sdgpkg.sh:5 | `OLD_DIR=/home/$(whoami)/.cache/SDG-PKG-OLD` | `OLD_DIR="$HOME/.cache/SDG-PKG-OLD"` |
+3. **`install.sh`**:
+   - `WORKDIR=/home/$(whoami)/.cache/SDG-PKG/sdg-pkg` → `WORKDIR="$HOME/.cache/SDG-PKG/sdg-pkg"`
+   - Copies to `~/.config/` and `~/.local/` which is correct, but needs to handle:
+     - Configs: `cp -r $WORKDIR/config/* ~/.config/`
+     - Locals: `cp -r $WORKDIR/local/* ~/.local/`
+     - Symlink: `sudo ln -sf ~/.local/SDG-PKG/sdgpkg.sh /usr/bin/sdgpkg`
 
-### 2.2 `install.sh` references old cache structure
-- `install.sh` copies from `$WORKDIR/config/*` and `$WORKDIR/local/*`.
-- Needs alignment with the sdgpkg.sh cache clone path (`$CACHE_DIR/$ARG/`).
+4. **`uninstall.sh`**:
+   - `rm -rf /home/$(whoami)/.local/SDG-PKG` → `rm -rf "$HOME/.local/SDG-PKG"`
 
-## 3. Empty Stub Scripts
-- Root-level `detect.sh` (empty) — implement or remove.
-- Root-level `docs/` (empty) — populate or remove.
-- Root-level `tips/` (empty) — populate or remove.
-- Root-level `other/` (empty) — populate or remove.
-- Root-level `cache/` (empty) — runtime-only, should not be in repo.
+5. **`update.sh`**:
+   - Same path fixes as install.sh
 
-## 4. Missing Features
+## Lifecycle Scripts
 
-### 4.1 `help` subcommand
-- The fallthrough `*)` only prints "help command" — needs real usage docs.
+Root-level `detect.sh`, `install.sh`, `uninstall.sh`, `update.sh` need implementation. See existing scripts in `local/` for the actual logic — root scripts should delegate.
 
-### 4.2 Dependency verification
-- TODO comment exists: `add verification for unipkg, git and other build dependencies`.
-- Implement `pre_install()` that checks `git`, `curl`, `bash` are available.
+## Bug Fixes
 
-### 4.3 `install` idempotency
-- TODO comment: `dont allow install if program is already installed`.
-- Add check before cloning: `if [ -e $CACHE_DIR/$ARG ]; then echo "already installed"; exit 0; fi`.
+- `sdgpkg.sh` line 8: `ARG=("$@")` is an array but used as scalar → change to `ARG="${1}"`
+- `runfile()` uses global `$ARG` instead of parameter → `runfile() { local PKG=$1; ... }`
+- `upgradable` subcommand typo (should be `upgradable`)
+- No `help` subcommand — add one
 
-### 4.4 Module lifecycle scripts
-- Before running a module's `install.sh`/`update.sh`/`uninstall.sh`, the manager should ensure the scripts are executable (`chmod +x`).
+## Modular Tips/Docs
 
-## 5. Modular Docs/Tips/Help System
+- Create `tips/` directory with tips about sdgpkg commands
+- Create `docs/` content documenting the package manager
+- `install.sh` should copy `tips/` → `~/.local/tips/SDG-PKG/`
+- `install.sh` should copy `docs/` → `~/.local/docs/SDG-PKG/`
 
-### 5.1 Contribution mechanism
-- Add a `docs/` directory convention: each module can place docs under `docs/SDG-<MODULE>/` that get deployed to `~/.config/sdgos/docs/<module>/`.
-- Add a `tips/` directory convention: each module can place `tips.list` snippets that get concatenated or sourced into the central `~/.config/sdgos/tips/tips.list`.
-- Update `sdgpkg.sh`'s `install` subcommand to merge tips from `$CACHE_DIR/$ARG/tips/*` into the global tips list during installation.
+## Empty Dir Cleanup
 
-### 5.2 sdgpkg.sh help integration
-- Add `sdgpkg help` that reads from `~/.config/sdgos/help/cmd-help.sh` or prints inline usage.
-- Add `sdgpkg --version` flag alongside existing `version` subcommand.
-
-## 6. Security
-- `sudo` is used for symlink — should verify user has sudo access.
-- `runfile()` runs `bash -c` on user-prompted files — ensure file exists and is not empty.
-- No TLS/SSL verification options on `curl` — consider `curl -fsSL`.
-
-## 7. Naming
-- `upgradable` is misspelled (should be `upgradable`). Fix to `upgradable` and deprecate old.
-
-## 8. Install Path Convention
-After migration, the sdgpkg install path structure should be:
-```
-~/.config/sdgos/<module>/        # config files
-~/.local/share/sdgos/<module>/   # binaries/scripts
-~/.cache/sdgos/<module>/         # generated/cached data
-~/.config/sdgos/tips/tips.list   # aggregated tips
-~/.config/sdgos/help/topics/     # aggregated help topics
-~/.config/sdgos/help/cmds.list   # aggregated command references
-```
+| Dir | Action |
+|-----|--------|
+| `docs/` | Populate or remove |
+| `tips/` | Populate or remove |
+| `other/` | Remove |
+| `cache/` | Remove (runtime only) |
