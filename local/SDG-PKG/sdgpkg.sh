@@ -31,7 +31,7 @@ runfile() {
 	local FILENAME=$1
 	echo "running file $FILENAME"
 	cat $CACHE_DIR/$ARG/$FILENAME
-	read -p "Do you wish to proceed? (y/N)" -n 1 CHOICE
+	read -p "Do you wish to proceed? (y/N)" -n 1 CHOICE > /dev/tty
 	echo ""
 	if [ "$CHOICE" != "y" ]; then
 		exit 0
@@ -53,9 +53,10 @@ case $SUBCMD in
 					exit 0
 				fi
 				git -C $CACHE_DIR clone $PKGURL $ARG
-				runfile install.sh
-				exit 0
+				
 			fi
+			runfile install.sh
+			exit 0
 		done
 		;;
 	update)
