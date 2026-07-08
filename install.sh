@@ -31,3 +31,7 @@ sudo ln -sf /home/$(whoami)/.local/SDG-PKG/sdgpkg.sh /usr/bin/sdgpkg
 which sdgpkg || echo "INSTALL FAILED!"
 
 sdgpkg version
+
+echo "installing unipkg"
+sdgpkg install unipkg
+
