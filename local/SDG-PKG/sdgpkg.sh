@@ -40,19 +40,22 @@ runfile() {
 	fi
 }
 
+pullpkg() {
+	if [ -e $CACHE_DIR/$ARG ];then
+		git -C $CACHE_DIR/$ARG pull
+	else
+		git -C $CACHE_DIR clone $PKGURL $ARG
+	fi
+}
+
 
 case $SUBCMD in
 	install)
-		# todo: dont allow install if program is already installed. 
 		for REPO in $REPOS; do
 			PACKAGE=$(curl -s $REPO | grep -e "$ARG")
 			if [ "$PACKAGE" != "" ]; then
 				PKGURL=$(echo $PACKAGE | cut -d"|" -f2)
-				if [ -e $CACHE_DIR/$ARG ];then
-					echo "module $ARG already installed"
-					exit 0
-				fi
-				git -C $CACHE_DIR clone $PKGURL $ARG
+				pullpkg
 				
 			fi
 			runfile install.sh
@@ -61,27 +64,27 @@ case $SUBCMD in
 		;;
 	update)
 		echo "updating git repo"
-		git -C $CACHE_DIR/$ARG pull
+		pullpkg
 		runfile update.sh
 			 
 		;;
 	upgrade)
 		INSTALLED=$(ls -1 $CACHE_DIR)
 		for ARG in $INSTALLED; do
-			git -C $CACHE_DIR/$ARG pull
+			pullpkg
 			runfile update.sh
 		done
 		;;
 	uninstall)
 		runfile uninstall.sh
-		mv $CACHE_DIR/$ARG $OLD_DIR/$ARG
+		mv $CACHE_DIR/$ARG $OLD_DIR/$ARG-$RANDOM
 		
 		;;
 	list)
 		ls -1 $CACHE_DIR
 		;;
 	version)
-		echo "version: 0.1"
+		echo "version: 0.2"
 		;;
 	info)
 		for REPO in $REPOS; do
@@ -119,8 +122,45 @@ case $SUBCMD in
 		echo "repo files are:"
 		echo "$REPOFILES"
 		;;
+	sync)
+		for REPO in $REPOS; do
+			PACKAGE=$(curl -s $REPO | grep -e "$ARG")
+			if [ "$PACKAGE" != "" ]; then
+				PKGURL=$(echo $PACKAGE | cut -d"|" -f2)
+				pullpkg
+			fi
+			exit 0
+		done
+		;;
+	remove)
+		mv $CACHE_DIR/$ARG $OLD_DIR/$ARG-$RANDOM
+		;;
+	
 	*)
-		echo "help command"
+		echo ""
+		echo "[ sdgpkg help ]"
+		echo ""
+		echo "commands:"
+		echo "sdgpkg help - shows this menu"
+		echo "sdgpkg fetch - lists available packages"
+		echo "sdgpkg list - lists installed packages"
+		echo "sdgpkg upgradable - lists upgradable packages"
+		echo "sdgpkg version - shows sdgpkg version"
+		echo ""
+		echo "sdgpkg install <packagename> - installs the package"
+		echo "sdgpkg update <packagename> - updates the package"
+		echo "sdgpkg uninstall <packagename> - uninstalls the package"
+		echo "sdgpkg upgrade - updates all installed packages"
+		echo "sdgpkg info <packagename> - fetches info about a package"
+		echo ""
+		echo "sdgpkg remove <packagename> - removes the repository without removing the binaries"
+		echo "sdgpkg sync <packagename> - clones or pulls the repository without installing"
+		echo ""
+		echo "example:"
+		echo ""
+		echo "sdgpkg install sdgos-meta - installs the package \"sdgos-meta\""
+		echo "sdgpkg update unipkg - updates unipkg"
+		echo "sdgpkg info sdg-pkg - shows info for sdg-pkg"
 		;;
 esac
 
