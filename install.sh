@@ -1,37 +1,24 @@
 #!/bin/bash
 
-### dependencies
+### dependencies (must be installed manually)
 # git
 # curl
 # bash
-# must be installed manually.
 
-# set working directory
-WORKDIR=/home/$(whoami)/.cache/SDG-PKG/sdg-pkg
+WORKDIR="$HOME/.cache/SDG-PKG/sdg-pkg"
 
-# install default configs
-cp -r $WORKDIR/config/* /home/$(whoami)/.config
+cp -r "$WORKDIR/config/"* "$HOME/.config/"
+cp -r "$WORKDIR/local/"* "$HOME/.local/"
+cp -r "$WORKDIR/docs/"* "$HOME/.local/docs/"
+cp -r "$WORKDIR/tips/"* "$HOME/.local/tips/"
 
-# install binaries
-cp -r $WORKDIR/local/* /home/$(whoami)/.local
+chmod a+x "$HOME/.local/SDG-PKG/sdgpkg.sh"
 
-# install docs and tips
-mkdir -p /home/$(whoami)/.local/docs
-mkdir -p /home/$(whoami)/.local/tips
-cp -r $WORKDIR/docs/* /home/$(whoami)/.local/docs
-cp -r $WORKDIR/tips/* /home/$(whoami)/.local/tips
+sudo ln -sf "$HOME/.local/SDG-PKG/sdgpkg.sh" /usr/bin/sdgpkg
 
-# make entrypoint executable
-chmod a+x /home/$(whoami)/.local/SDG-PKG/sdgpkg.sh
-
-# symlink entrypoint
-sudo ln -sf /home/$(whoami)/.local/SDG-PKG/sdgpkg.sh /usr/bin/sdgpkg
-
-# verify binary
 which sdgpkg || echo "INSTALL FAILED!"
 
 sdgpkg version
 
 echo "installing unipkg"
 sdgpkg install unipkg
-

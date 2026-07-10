@@ -1,14 +1,12 @@
 #!/bin/bash
 
-rm -rf /home/$(whoami)/.local/SDG-PKG
-cp -r /home/$(whoami)/.cache/SDG-PKG/sdg-pkg/local/* /home/$(whoami)/.local
-sudo ln -sf /home/$(whoami)/.local/SDG-PKG/sdgpkg.sh /usr/bin/sdgpkg
+WORKDIR="$HOME/.cache/SDG-PKG/sdg-pkg"
 
-rm -rf /home/$(whoami)/.local/docs/SDG-PKG
-rm -rf /home/$(whoami)/.local/tips/SDG-PKG
-mkdir -p /home/$(whoami)/.local/docs
-mkdir -p /home/$(whoami)/.local/tips
-cp -r /home/$(whoami)/.cache/SDG-PKG/sdg-pkg/docs/* /home/$(whoami)/.local/docs
-cp -r /home/$(whoami)/.cache/SDG-PKG/sdg-pkg/tips/* /home/$(whoami)/.local/tips
+rm -rf "$HOME/.local/SDG-PKG"
+cp -r "$WORKDIR/local/"* "$HOME/.local/"
 
+rm -rf "$HOME/.local/docs/SDG-PKG" "$HOME/.local/tips/SDG-PKG"
+cp -r "$WORKDIR/docs/"* "$HOME/.local/docs/"
+cp -r "$WORKDIR/tips/"* "$HOME/.local/tips/"
 
+sudo ln -sf "$HOME/.local/SDG-PKG/sdgpkg.sh" /usr/bin/sdgpkg
