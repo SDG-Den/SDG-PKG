@@ -1,7 +1,7 @@
 Package Name: sdg-pkg
 Descriptive Name: SDG Package Manager
-Source: https://git.sdgcloud.nl/SDGDen/SDG-PKG
-Maintainer: SDGDen <sdgden@sdgcloud.nl>
+Source: https://github.com/SDG-Den/SDG-PKG
+Maintainer:
 Version:0.4.1.1
 
 Dependencies: 
