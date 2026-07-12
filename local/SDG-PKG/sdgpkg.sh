@@ -151,7 +151,7 @@ case $SUBCMD in
 		case $subcomm in
 			list)
 			echo "checking branch list for $CACHE_DIR/$ARG"
-			echo $(git -C $CACHE_DIR/$ARG branch -l)
+			echo "$(git -C $CACHE_DIR/$ARG branch -l)"
 			;;
 			switch)
 			module=$1
