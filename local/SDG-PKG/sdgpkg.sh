@@ -150,6 +150,7 @@ case $SUBCMD in
 		ARG=("$@")
 		case $subcomm in
 			list)
+			echo "checking branch list for $CACHE_DIR/$ARG"
 			echo $(git -C $CACHE_DIR/$ARG branch -l)
 			;;
 			switch)
