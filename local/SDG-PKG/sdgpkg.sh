@@ -164,7 +164,7 @@ case $SUBCMD in
 			echo "sdgpkg branch list <packagename> - lists branches for a package"
 			echo "sdgpkg branch switch <packagename> <branch> - switches the local cached repository to a specified branch"
 			echo ""
-
+		esac
 
 
 		;;
