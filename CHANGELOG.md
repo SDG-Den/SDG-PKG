@@ -1,3 +1,8 @@
+#  sdg-pkg update 0.4.1
+    
+## changelog 0.4 > 0.4.1
+
+minor changes and fixes to branch and changelog commands
 #  sdg-pkg update 0.4
     
 ## changelog 0.3 > 0.4
