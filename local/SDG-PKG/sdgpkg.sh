@@ -135,6 +135,40 @@ case $SUBCMD in
 	remove)
 		mv $CACHE_DIR/$ARG $OLD_DIR/$ARG-$RANDOM
 		;;
+	changelog)
+	for REPO in $REPOS; do
+			PACKAGE=$(curl -s $REPO | grep -e "$ARG")
+			if [ "$PACKAGE" != "" ]; then
+				PKGURL=$(echo $PACKAGE | cut -d"|" -f3)
+				echo $(curl $(echo $PKGURL | sed 's/info.md/CHANGELOG.md/' | head -n 40)
+			fi
+		done
+		;;
+	branch)
+		subcomm=$1
+		shift 1
+		ARG=("$@")
+		case $subcomm in
+			list)
+			echo $(git -C $CACHE_DIR/$ARG branch -l)
+			;;
+			switch)
+			module=$1
+			branch=$2
+			git -C $CACHE_DIR/$module switch -f --progress $branch 
+			;;
+			*)
+			echo "[ sdgpkg help ]"
+			echo ""
+			echo "branch subcommands"
+			echo "sdgpkg branch list <packagename> - lists branches for a package"
+			echo "sdgpkg branch switch <packagename> <branch> - switches the local cached repository to a specified branch"
+			echo ""
+
+
+
+		;;
+		
 	
 	*)
 		echo ""
@@ -155,12 +189,14 @@ case $SUBCMD in
 		echo ""
 		echo "sdgpkg remove <packagename> - removes the repository without removing the binaries"
 		echo "sdgpkg sync <packagename> - clones or pulls the repository without installing"
+		echo "sdgpkg branch <subcommand> <packagename> <branch>" - lists and switches git branches
 		echo ""
 		echo "example:"
 		echo ""
 		echo "sdgpkg install sdgos-meta - installs the package \"sdgos-meta\""
 		echo "sdgpkg update unipkg - updates unipkg"
 		echo "sdgpkg info sdg-pkg - shows info for sdg-pkg"
+		echo "sdgpkg branch switch sdg-vox dev - switches the sdg-vox repo to the dev branch" 
 		;;
 esac
 
