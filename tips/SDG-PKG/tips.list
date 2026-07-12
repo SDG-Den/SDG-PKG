@@ -1,0 +1,8 @@
+Install a package with: sdgpkg install <name>
+List installed packages with: sdgpkg list
+Update all packages with: sdgpkg upgrade
+Search available packages with: sdgpkg fetch
+Check for updates with: sdgpkg upgradable
+View package info with: sdgpkg info <name>
+Remove a package with: sdgpkg uninstall <name>
+Clone without installing with: sdgpkg sync <name>
