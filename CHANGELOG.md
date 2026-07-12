@@ -1,3 +1,8 @@
+#  sdg-pkg update 0.4.1.1
+    
+## changelog 0.4.1 > 0.4.1.1
+
+replaced repo with proper github one
 #  sdg-pkg update 0.4.1
     
 ## changelog 0.4 > 0.4.1
