@@ -1,3 +1,24 @@
+#  sdg-pkg update 0.4.2
+    
+## changelog 0.4.1.1 > 0.4.2
+
+added new repo management functionality:
+
+subcommand `repo`
+
+sdgpkg repo list:
+lists installed repositories with their priority and their URL
+
+sdgpkg repo fetch:
+fetches available repositories from the central repolist
+
+sdgpkg repo add:
+adds a repository either from a url to a .repo file or from the repolist
+
+sdgpkg repo remove:
+removes a repository using grep-based matching
+
+
 #  sdg-pkg update 0.4.1.1
     
 ## changelog 0.4.1 > 0.4.1.1

@@ -168,7 +168,50 @@ case $SUBCMD in
 
 
 		;;
-		
+	repo)
+		subcomm=$1
+		shift 1
+		ARG=("$@")
+		case $subcomm in
+			list)
+			REPOS=$(ls -1 ~/.config/SDG-PKG | cut -d. -f1)
+			for REPO in $REPOS; do
+				REPONAME=$(echo $REPO | cut -d- -f2)
+				REPOPRIO=$(echo $REPO | cut -d- -f1)
+				echo "Repository $REPONAME (prio $REPROPRIO)"
+				cat ~/.config/SDG-PKG/$REPO.repo
+				echo ""
+			;;
+			fetch)
+			curl -s https://raw.githubusercontent.com/SDG-Den/SDG-REPO/refs/heads/main/REPOLIST | cut -d| -f1
+			;;
+			remove)
+			REPO=$(ls -1 ~/.config/SDG-PKG | grep -e $ARG)
+			rm ~/.config/SDG-PKG/$REPO
+
+			;;
+			add)
+			URL=$(curl -s https://raw.githubusercontent.com/SDG-Den/SDG-REPO/refs/heads/main/REPOLIST | grep -e $ARG | cut -d| -f2)
+			if [ "$URL" == "" ]; then
+				URL=$ARG
+			fi
+			echo $URL
+			read -p "local repository name: " REPONAME
+			read -p "priority (00-99, lower is better): " PRIO
+			echo "$URL" > ~/.config/SDG-PKG/$PRIO-$REPONAME.repo
+			sdgpkg repo list
+			;;
+			*)
+			echo " [ sdgpkg help ]"
+			echo ""
+			echo "commands:"
+			echo "sdgpkg repo list - lists installed repositories with their priorities"
+			echo "sdgpkg repo fetch - fetches available repositories from the repolist"
+			echo "sdgpkg repo add <repository> - adds a repository from the repolist or from a URL"
+			echo "sdgpkg repo remove <repository> - removes a repository using grep-based matching"
+			;;
+		esac
+		;;
 	
 	*)
 		echo ""
