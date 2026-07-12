@@ -174,16 +174,16 @@ case $SUBCMD in
 		ARG=("$@")
 		case $subcomm in
 			list)
-			REPOS=$(ls -1 ~/.config/SDG-PKG | cut -d. -f1)
+			REPOS=$(ls -1 ~/.config/SDG-PKG | cut -d "." -f1)
 			for REPO in $REPOS; do
-				REPONAME=$(echo $REPO | cut -d- -f2)
-				REPOPRIO=$(echo $REPO | cut -d- -f1)
+				REPONAME=$(echo $REPO | cut -d "-" -f2)
+				REPOPRIO=$(echo $REPO | cut -d "-" -f1)
 				echo "Repository $REPONAME (prio $REPROPRIO)"
 				cat ~/.config/SDG-PKG/$REPO.repo
 				echo ""
 			;;
 			fetch)
-			curl -s https://raw.githubusercontent.com/SDG-Den/SDG-REPO/refs/heads/main/REPOLIST | cut -d| -f1
+			curl -s https://raw.githubusercontent.com/SDG-Den/SDG-REPO/refs/heads/main/REPOLIST | cut -d "|" -f1
 			;;
 			remove)
 			REPO=$(ls -1 ~/.config/SDG-PKG | grep -e $ARG)
@@ -191,7 +191,7 @@ case $SUBCMD in
 
 			;;
 			add)
-			URL=$(curl -s https://raw.githubusercontent.com/SDG-Den/SDG-REPO/refs/heads/main/REPOLIST | grep -e $ARG | cut -d| -f2)
+			URL=$(curl -s https://raw.githubusercontent.com/SDG-Den/SDG-REPO/refs/heads/main/REPOLIST | grep -e $ARG | cut -d "|" -f2)
 			if [ "$URL" == "" ]; then
 				URL=$ARG
 			fi
