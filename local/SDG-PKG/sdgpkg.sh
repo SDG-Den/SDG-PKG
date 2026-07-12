@@ -181,6 +181,7 @@ case $SUBCMD in
 				echo "Repository $REPONAME (prio $REPROPRIO)"
 				cat ~/.config/SDG-PKG/$REPO.repo
 				echo ""
+			done
 			;;
 			fetch)
 			curl -s https://raw.githubusercontent.com/SDG-Den/SDG-REPO/refs/heads/main/REPOLIST | cut -d "|" -f1
