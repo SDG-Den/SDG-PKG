@@ -178,7 +178,7 @@ case $SUBCMD in
 			for REPO in $REPOS; do
 				REPONAME=$(echo $REPO | cut -d "-" -f2)
 				REPOPRIO=$(echo $REPO | cut -d "-" -f1)
-				echo "Repository $REPONAME (prio $REPROPRIO)"
+				echo "Repository $REPONAME (prio $REPOPRIO)"
 				cat ~/.config/SDG-PKG/$REPO.repo
 				echo ""
 			done
