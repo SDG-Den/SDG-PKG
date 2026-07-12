@@ -140,7 +140,7 @@ case $SUBCMD in
 			PACKAGE=$(curl -s $REPO | grep -e "$ARG")
 			if [ "$PACKAGE" != "" ]; then
 				PKGURL=$(echo $PACKAGE | cut -d"|" -f3)
-				echo $(curl $(echo $PKGURL | sed 's/info.md/CHANGELOG.md/') | head -n 40)
+				curl -s $(echo $PKGURL | sed 's/info.md/CHANGELOG.md/') | head -n 40
 			fi
 		done
 		;;
