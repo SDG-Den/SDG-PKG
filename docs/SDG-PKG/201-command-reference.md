@@ -11,7 +11,7 @@ All commands follow the form `sdgpkg <command> [arguments]`.
 | `sdgpkg list` | List all installed (cached) packages |
 | `sdgpkg fetch` | List all available packages from all configured repositories |
 | `sdgpkg info <package>` | Fetch and display info.md metadata for a package |
-| `sdgpkg changelog <package>` | Show the changelog for a package (last 40 lines) |
+| `sdgpkg changelog <package>` | Show the recent changelog for a package |
 | `sdgpkg upgradable` | List packages with pending git updates behind their remote |
 
 ## Install Commands

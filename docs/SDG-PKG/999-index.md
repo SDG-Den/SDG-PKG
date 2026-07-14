@@ -1,6 +1,8 @@
 # Index
 
-- [101-quick-start](101-quick-start.md) — Dependencies and quick start for SDG-PKG
+- [000-overview](000-overview.md) — What is a package manager and how sdgpkg works
+- [001-installation](001-installation.md) — Bootstrap and dependencies
+- [101-quick-start](101-quick-start.md) — Quick start for SDG-PKG
 - [201-command-reference](201-command-reference.md) — Complete command reference for sdgpkg
 - [301-package-format](301-package-format.md) — SDG-PKG package format and required structure
 - [302-repository-format](302-repository-format.md) — Repository format and package discovery
