@@ -36,6 +36,17 @@ Manage git branches for a cached package.
 | `sdgpkg branch list <package>` | List all branches in the cached repository |
 | `sdgpkg branch switch <package> <branch>` | Switch the cached repository to a different branch |
 
+### repo
+
+Manage package repository sources.
+
+| Subcommand | Description |
+|------------|-------------|
+| `sdgpkg repo list` | List configured repositories with their priorities |
+| `sdgpkg repo fetch` | Fetch available repositories from the remote repolist |
+| `sdgpkg repo add <name>` | Add a repository from the repolist or from a URL |
+| `sdgpkg repo remove <name>` | Remove a configured repository |
+
 ## Examples
 
 ```bash
@@ -43,4 +54,6 @@ sdgpkg install sdgos-meta
 sdgpkg update unipkg
 sdgpkg info sdg-pkg
 sdgpkg branch switch sdg-vox dev
+sdgpkg repo list
+sdgpkg repo add core
 ```

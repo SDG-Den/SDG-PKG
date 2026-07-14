@@ -34,6 +34,18 @@ sdgpkg remove <name>   # Remove cache without uninstalling
 sdgpkg install <name>  # Fresh clone + install
 ```
 
+## Manual Package Update
+
+If `sdgpkg` itself is broken or not functional, you can update a package manually:
+
+```bash
+cd ~/.cache/SDG-PKG/<packagename>
+git pull
+./update.sh
+```
+
+This bypasses sdgpkg entirely and is especially useful for updating or reinstalling sdgpkg itself if it is not functional.
+
 ## Known Bugs
 
 ### Install runs install.sh even without a match

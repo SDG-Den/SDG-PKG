@@ -40,6 +40,19 @@ unipkg|https://github.com/SDG-Den/unipkg|https://raw.githubusercontent.com/SDG-D
 3. Searches the combined index for matching package names
 4. Uses the pipe-delimited fields to clone the repo or fetch info
 
+## Managing Repositories with sdgpkg repo
+
+The `sdgpkg repo` subcommand provides a convenient way to manage your configured package sources:
+
+| Command | Description |
+|---------|-------------|
+| `sdgpkg repo list` | Lists all configured repositories with their priority numbers |
+| `sdgpkg repo fetch` | Fetches available repositories from the remote repolist |
+| `sdgpkg repo add <name>` | Adds a repository by name (from the repolist) or by direct URL |
+| `sdgpkg repo remove <name>` | Removes a repository (uses grep-based name matching) |
+
+Repositories are stored as `.repo` files in `~/.config/SDG-PKG/`, named with a priority prefix (e.g. `50-core.repo`). Lower priority numbers are checked first.
+
 ## Related
 
 - See [05-creating-a-package.md](./05-creating-a-package.md) for adding your own packages to a repository

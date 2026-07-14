@@ -6,3 +6,7 @@
 [SDG-PKG]: View package info with: sdgpkg info <name>
 [SDG-PKG]: Remove a package with: sdgpkg uninstall <name>
 [SDG-PKG]: Clone without installing with: sdgpkg sync <name>
+[SDG-PKG]: List configured repositories with: sdgpkg repo list
+[SDG-PKG]: Add a custom repository with: sdgpkg repo add <url>
+[SDG-PKG]: Switch a package to a different branch with: sdgpkg branch switch <pkg> <branch>
+[SDG-PKG]: Fork a package and set your repo as higher priority (lower number) to use your custom version

@@ -46,14 +46,30 @@ Copied from `config/SDG-PKG/` during install. Each file contains a URL to a remo
 
 `/usr/bin/sdgpkg` is a symlink to `~/.local/SDG-PKG/sdgpkg.sh`.
 
+## Cleanup notes
+
+- **Archive directory** (`~/.cache/SDG-PKG-OLD/`): Safe to clean up at any time. These are old package clones kept as backup after uninstall.
+- **Cache directory** (`~/.cache/SDG-PKG/`): Do not wipe this directory manually while packages are installed — it contains the active git clones used for updates.
+
 ## Reinstall Behavior
 
-Running `sdgpkg install` on an already-installed package pulls the latest changes and runs `install.sh` again. To force a clean reinstall:
+Running `sdgpkg install` on an already-installed package pulls the latest changes and runs `install.sh` again.
+
+Note the difference between removal methods:
+
+| Command | Effect |
+|---------|--------|
+| `sdgpkg remove <name>` | Deletes the git cache only. Leaves installed files intact. |
+| `sdgpkg uninstall <name>` | Runs `uninstall.sh` to remove deployed files, then archives the cache. Only config files are left behind. |
+
+To force a clean reinstall:
 
 ```bash
 sdgpkg remove <name>
 sdgpkg install <name>
 ```
+
+This is faster than uninstall + install because it skips the uninstall script.
 
 ## Related
 

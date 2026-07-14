@@ -17,6 +17,8 @@ SDG-PKG is a custom git-based package manager written in Bash. It manages packag
 - **Uninstall** — `sdgpkg uninstall <name>` runs uninstall.sh + archives
 - **Package info** — `sdgpkg info <name>` fetches remote README
 - **Sync only** — `sdgpkg sync <name>` clones/pulls without running install
+- **Branch management** — `sdgpkg branch list/switch <pkg>` manage git branches
+- **Repository management** — `sdgpkg repo list/fetch/add/remove` manage package sources
 - **Automatic unipkg bootstrap** — installs `unipkg` system package helper
 
 ## CLI Usage
@@ -32,6 +34,12 @@ sdgpkg upgradable              # Check for updates
 sdgpkg info sdg-fetch          # Show package details
 sdgpkg sync sdg-fetch          # Clone without installing
 sdgpkg remove sdg-fetch        # Remove cache only
+sdgpkg branch list sdg-vox     # List git branches
+sdgpkg branch switch sdg-vox dev  # Switch git branch
+sdgpkg repo list               # List configured repositories
+sdgpkg repo fetch              # Fetch available repositories
+sdgpkg repo add core           # Add a repository
+sdgpkg repo remove core        # Remove a repository
 ```
 
 ## Bootstrap
