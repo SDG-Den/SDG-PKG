@@ -32,7 +32,7 @@ On `uninstall`, the package cache is moved here with a random suffix instead of 
   └── ...
 ```
 
-Copied from `config/SDG-PKG/` during install. Each file contains a URL to a remote package index. See [04-repository-format.md](./04-repository-format.md).
+Copied from `config/SDG-PKG/` during install. Each file contains a URL to a remote package index. See [302-repository-format.md](./302-repository-format.md).
 
 ## Local Files
 
@@ -49,11 +49,11 @@ Copied from `config/SDG-PKG/` during install. Each file contains a URL to a remo
 ## Cleanup notes
 
 - **Archive directory** (`~/.cache/SDG-PKG-OLD/`): Safe to clean up at any time. These are old package clones kept as backup after uninstall.
-- **Cache directory** (`~/.cache/SDG-PKG/`): Do not wipe this directory manually while packages are installed — it contains the active git clones used for updates.
+- **Cache directory** (`~/.cache/SDG-PKG/`): Do not wipe this directory manually while packages are installed — it contains the active git clones used for updates. The cache also serves as the package index: `sdgpkg list` reads it to determine which packages are installed. If cleared, `sdgpkg` will report no installed packages.
 
 ## Reinstall Behavior
 
-Running `sdgpkg install` on an already-installed package pulls the latest changes and runs `install.sh` again.
+Running `sdgpkg install` on an already-installed package pulls the latest changes and runs `install.sh` again. **Note:** only run `install.sh` on a system where the package is not already deployed — after a clean `uninstall`, or on a fresh system. Running `install.sh` over an existing deployment can cause duplicate files or broken state.
 
 Note the difference between removal methods:
 
@@ -62,15 +62,15 @@ Note the difference between removal methods:
 | `sdgpkg remove <name>` | Deletes the git cache only. Leaves installed files intact. |
 | `sdgpkg uninstall <name>` | Runs `uninstall.sh` to remove deployed files, then archives the cache. Only config files are left behind. |
 
-To force a clean reinstall:
+To re-sync the cache after corruption without affecting installed files:
 
 ```bash
 sdgpkg remove <name>
-sdgpkg install <name>
+sdgpkg sync <name>
 ```
 
-This is faster than uninstall + install because it skips the uninstall script.
+This clears the cache but leaves installed files intact, then re-clones the repository without running `install.sh`.
 
 ## Related
 
-- See [08-troubleshooting.md](./08-troubleshooting.md) for issues with stale cache
+- See [801-troubleshooting.md](./801-troubleshooting.md) for issues with stale cache

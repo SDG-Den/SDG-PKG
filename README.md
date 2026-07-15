@@ -2,8 +2,6 @@
 
 The SDG-OS package manager — install, update, and manage modules from the SDG-OS registry.
 
-## Description
-
 SDG-PKG is a custom git-based package manager written in Bash. It manages packages as git repositories, cloning them from remote URLs listed in `.repo` index files and executing lifecycle scripts (`install.sh`, `update.sh`, `uninstall.sh`).
 
 ## Features
@@ -45,7 +43,7 @@ sdgpkg repo remove core        # Remove a repository
 ## Bootstrap
 
 ```bash
-git clone https://git.sdgcloud.nl/SDGDen/SDG-PKG ~/.cache/SDG-PKG/sdg-pkg
+git clone https://github.com/SDG-Den/SDG-PKG ~/.cache/SDG-PKG/sdg-pkg
 cd ~/.cache/SDG-PKG/sdg-pkg
 bash install.sh
 ```

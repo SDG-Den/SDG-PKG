@@ -30,9 +30,11 @@
 Package behavior is unexpected or scripts fail to run:
 
 ```bash
-sdgpkg remove <name>   # Remove cache without uninstalling
-sdgpkg install <name>  # Fresh clone + install
+sdgpkg remove <name>   # Remove cache without affecting installed files
+sdgpkg sync <name>     # Re-clone without running install.sh
 ```
+
+If the entire cache was cleared, run `sdgpkg sync` for each affected package to rebuild it without re-running install scripts.
 
 ## Manual Package Update
 
@@ -54,15 +56,19 @@ The `install` subcommand runs `install.sh` for every repo entry it checks, even 
 
 ## Clearing Everything
 
-To completely remove SDG-PKG and all packages:
+To remove SDG-PKG's own files and the package cache (does **not** remove packages' deployed files or configs — only the cache):
 
 ```bash
-rm -rf ~/.cache/SDG-PKG
-rm -rf ~/.cache/SDG-PKG-OLD
-rm -rf ~/.local/SDG-PKG
-rm -rf ~/.local/docs/SDG-PKG
-rm -rf ~/.local/tips/SDG-PKG
-sudo unlink /usr/bin/sdgpkg
+rm -rf ~/.cache/SDG-PKG       # Package cache only (see note below)
+rm -rf ~/.cache/SDG-PKG-OLD   # Archived packages
+rm -rf ~/.local/SDG-PKG       # sdgpkg CLI binary
+rm -rf ~/.local/docs/SDG-PKG  # These docs
+rm -rf ~/.local/tips/SDG-PKG  # Tips
+sudo unlink /usr/bin/sdgpkg   # Symlink
 ```
 
-Then reinstall from scratch (see [01-quick-start.md](./01-quick-start.md)).
+Then reinstall from scratch (see [001-installation.md](./001-installation.md)). The following will **not** be removed — they were deployed by each package's `install.sh`:
+- `~/.local/<other-packages>/` — installed package binaries
+- `~/.config/<other-packages>/` — installed package configs
+- `~/.local/docs/<other-packages>/` — other package docs
+- `~/.local/tips/<other-packages>/` — other package tips

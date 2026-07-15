@@ -22,10 +22,24 @@ bash bootstrap.sh
 
 This creates `/usr/bin/sdgpkg` pointing to the main script and auto-installs `unipkg`.
 
+## Install your first package
+
+```bash
+sdgpkg install sdg-fetch
+```
+
+This clones the package repository to `~/.cache/SDG-PKG/sdg-fetch/` and runs its `install.sh`.
+
 ## Verify
 
 ```bash
 sdgpkg list
 ```
 
-You should see `sdg-pkg` and `unipkg` in the list.
+You should see `sdg-fetch` (and `sdg-pkg` and `unipkg` if auto-installed).
+
+## Next steps
+
+- See [201-command-reference.md](./201-command-reference.md) for all commands
+- See [301-package-format.md](./301-package-format.md) for the package format spec
+- See [401-creating-a-package.md](./401-creating-a-package.md) to create your own package

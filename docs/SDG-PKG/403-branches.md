@@ -31,17 +31,6 @@ sdgpkg branch switch sdg-vox main
 sdgpkg update sdg-vox
 ```
 
-### Custom branches
-
-You can add your own remote and checkout any branch available in the repository:
-
-```bash
-cd ~/.cache/SDG-PKG/<package>
-git remote add myfork https://github.com/you/<package>
-git fetch myfork
-sdgpkg branch switch <package> myfork/custom-branch
-```
-
 ## Notes
 
 - Branch state is persistent across updates — `sdgpkg update` will pull from the currently checked-out branch
@@ -50,4 +39,4 @@ sdgpkg branch switch <package> myfork/custom-branch
 
 ## Related
 
-- See [09-forking-repos.md](./09-forking-repos.md) for creating custom package forks
+- See [402-forking-repos.md](./402-forking-repos.md) for creating custom package forks. If you need custom branches, fork the package repo, develop your branch with `sdgbuild`, push it, then use `sdgpkg branch switch` to select it.

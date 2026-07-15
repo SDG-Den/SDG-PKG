@@ -4,13 +4,17 @@ This guide walks through packaging software for SDG-PKG.
 
 ## Quick start with sdgbuild
 
-The easiest way to create a package is using `sdgbuild init`, which scaffolds the entire structure:
+The easiest way to create a package is using `sdgbuild init`, which scaffolds the entire structure. It must be run inside a git repository:
 
 ```bash
+# Create a repository on your remote git host (GitHub, GitLab, etc.)
+# then clone it down locally:
+git clone https://github.com/you/my-package
+cd my-package
 sdgbuild init
 ```
 
-This creates all required directories (`local/`, `config/`, `docs/`, `tips/`), populates `info.md` from your git remote, and copies lifecycle script templates.
+This creates all required directories (`local/`, `config/`, `docs/`, `tips/`), populates `info.md` from your git remote, and copies lifecycle script templates with placeholder variables (`<PKGNAME>`, `<ENTRYPOINT>`, `<DIR>`, `<COMMAND>`, etc.) that get substituted interactively.
 
 ## Manual method
 
@@ -24,31 +28,68 @@ git init
 
 ### Step 2: Add lifecycle scripts
 
-#### `install.sh`
+Lifecycle scripts follow a template format with placeholder variables. Below are the recommended templates matching what `sdgbuild init` generates:
 
-Deploy your software to the system:
+#### `install.sh`
 
 ```bash
 #!/bin/bash
-cp -r "$PWD/bin" /usr/local/bin/my-package
+
+PKG_INDEX=<PKGNAME>
+LOCALDIR=<DIR>
+entrypoint=<ENTRYPOINT>
+command=<COMMAND>
+
+WORKDIR="$HOME/.cache/SDG-PKG/$PKG_INDEX"
+
+cp -r "$WORKDIR/config/"* "$HOME/.config/"
+cp -r "$WORKDIR/local/"* "$HOME/.local/"
+cp -r "$WORKDIR/docs/"* "$HOME/.local/docs/"
+cp -r "$WORKDIR/tips/"* "$HOME/.local/tips/"
+
+sudo ln -sf "$HOME/.local/$LOCALDIR/$entrypoint" /usr/bin/$command
+
+which $command || echo "INSTALL FAILED!"
 ```
 
 #### `update.sh`
 
-Re-deploy after a git pull:
-
 ```bash
 #!/bin/bash
-cp -r "$PWD/bin" /usr/local/bin/my-package
+
+PKG_INDEX=<PKGNAME>
+LOCALDIR=<DIR>
+DOCDIR=<DIR>
+TIPDIR=<DIR>
+entrypoint=<ENTRYPOINT>
+command=<COMMAND>
+
+WORKDIR="$HOME/.cache/SDG-PKG/$PKG_INDEX"
+
+rm -rf "$HOME/.local/$LOCALDIR"
+cp -r "$WORKDIR/local/"* "$HOME/.local/"
+
+rm -rf "$HOME/.local/docs/$DOCDIR" "$HOME/.local/tips/$TIPDIR"
+cp -r "$WORKDIR/docs/"* "$HOME/.local/docs/"
+cp -r "$WORKDIR/tips/"* "$HOME/.local/tips/"
+
+sudo ln -sf "$HOME/.local/$LOCALDIR/$entrypoint" /usr/bin/$command
 ```
 
 #### `uninstall.sh`
 
-Remove everything `install.sh` placed:
-
 ```bash
 #!/bin/bash
-rm -rf /usr/local/bin/my-package
+
+LOCALDIR=<DIR>
+DOCDIR=<DIR>
+TIPDIR=<DIR>
+command=<COMMAND>
+
+rm -rf $HOME/.local/$LOCALDIR
+rm -rf $HOME/.local/docs/$DOCDIR
+rm -rf $HOME/.local/tips/$TIPDIR
+sudo unlink /usr/bin/$command
 ```
 
 All three scripts must be executable (`chmod +x`).
@@ -98,6 +139,6 @@ sdgpkg install my-package
 
 ## Related
 
-- See [03-package-format.md](./03-package-format.md) for package format details
-- See [04-repository-format.md](./04-repository-format.md) for repo index format
-- See [09-forking-repos.md](./09-forking-repos.md) for customizing existing packages
+- See [301-package-format.md](./301-package-format.md) for package format details
+- See [302-repository-format.md](./302-repository-format.md) for repo index format
+- See [402-forking-repos.md](./402-forking-repos.md) for customizing existing packages

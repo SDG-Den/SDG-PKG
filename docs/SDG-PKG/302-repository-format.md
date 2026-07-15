@@ -55,4 +55,4 @@ Repositories are stored as `.repo` files in `~/.config/SDG-PKG/`, named with a p
 
 ## Related
 
-- See [05-creating-a-package.md](./05-creating-a-package.md) for adding your own packages to a repository
+- See [401-creating-a-package.md](./401-creating-a-package.md) for adding your own packages to a repository

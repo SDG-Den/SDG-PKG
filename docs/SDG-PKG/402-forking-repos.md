@@ -45,5 +45,5 @@ Since your repo has a lower priority number, sdgpkg will find your version first
 
 ## Related
 
-- See [10-branches.md](./10-branches.md) for working with branches during development
-- See [04-repository-format.md](./04-repository-format.md) for repo index format details
+- See [403-branches.md](./403-branches.md) for working with branches during development
+- See [302-repository-format.md](./302-repository-format.md) for repo index format details
