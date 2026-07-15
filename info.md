@@ -2,7 +2,7 @@ Package Name: sdg-pkg
 Descriptive Name: SDG Package Manager
 Source: https://github.com/SDG-Den/SDG-PKG
 Maintainer: SDGDen
-Version:0.4.2
+Version:0.5
 
 Dependencies: 
 git, curl, bash, sudo

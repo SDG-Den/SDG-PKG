@@ -48,12 +48,6 @@ git pull
 
 This bypasses sdgpkg entirely and is especially useful for updating or reinstalling sdgpkg itself if it is not functional.
 
-## Known Bugs
-
-### Install runs install.sh even without a match
-
-The `install` subcommand runs `install.sh` for every repo entry it checks, even when no matching package is found. This can result in unexpected script execution. Always verify that the package name is correct before running install.
-
 ## Clearing Everything
 
 To remove SDG-PKG's own files and the package cache (does **not** remove packages' deployed files or configs — only the cache):

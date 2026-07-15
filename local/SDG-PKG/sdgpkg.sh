@@ -56,11 +56,12 @@ case $SUBCMD in
 			if [ "$PACKAGE" != "" ]; then
 				PKGURL=$(echo $PACKAGE | cut -d"|" -f2)
 				pullpkg
-				
+				runfile install.sh
+				exit 0
 			fi
-			runfile install.sh
-			exit 0
 		done
+		echo "error: package '$ARG' not found"
+		exit 1
 		;;
 	update)
 		echo "updating git repo"
@@ -128,9 +129,11 @@ case $SUBCMD in
 			if [ "$PACKAGE" != "" ]; then
 				PKGURL=$(echo $PACKAGE | cut -d"|" -f2)
 				pullpkg
+				exit 0
 			fi
-			exit 0
 		done
+		echo "error: package '$ARG' not found"
+		exit 1
 		;;
 	remove)
 		mv $CACHE_DIR/$ARG $OLD_DIR/$ARG-$RANDOM

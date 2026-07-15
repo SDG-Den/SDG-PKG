@@ -121,13 +121,19 @@ my-package/
 
 ### Step 5: Add to a repository index
 
-Push your package to a git host, then add an entry to a `.repo` index:
+Push your package to a git host, then add an entry to a remote package index file. Host this file somewhere `curl` can reach:
 
 ```
 my-package|https://github.com/you/my-package|https://raw.githubusercontent.com/you/my-package/main/info.md
 ```
 
-The `.repo` file can be hosted anywhere `curl` can reach. Add its URL via `sdgpkg repo add <url>`, or place it in `~/.config/SDG-PKG/`.
+Then add it to sdgpkg as a local repo pointer:
+
+```bash
+sdgpkg repo add https://example.com/my-packages.repo
+```
+
+When prompted, give it a name and priority. The local `.repo` file is stored in `~/.config/SDG-PKG/` and contains only that URL — the actual package listing lives on the remote host. See [302-repository-format.md](./302-repository-format.md) for details on the two-level format.
 
 ### Step 6: Test
 

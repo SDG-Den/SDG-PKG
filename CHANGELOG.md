@@ -1,3 +1,9 @@
+#  sdg-pkg update 0.5
+    
+## changelog 0.4.2 > 0.5
+
+fixed install bug and updated documentation. 
+
 #  sdg-pkg update 0.4.2
     
 ## changelog 0.4.1.1 > 0.4.2

@@ -53,7 +53,7 @@ Copied from `config/SDG-PKG/` during install. Each file contains a URL to a remo
 
 ## Reinstall Behavior
 
-Running `sdgpkg install` on an already-installed package pulls the latest changes and runs `install.sh` again. **Note:** only run `install.sh` on a system where the package is not already deployed — after a clean `uninstall`, or on a fresh system. Running `install.sh` over an existing deployment can cause duplicate files or broken state.
+`sdgpkg install` should only be used for fresh installs — either on a clean system or after `sdgpkg uninstall` has removed the previous deployment. Running `install.sh` over an existing deployment can cause duplicate files or broken state.
 
 Note the difference between removal methods:
 
